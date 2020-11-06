@@ -52,6 +52,8 @@ void MotionControl::on_connectButton_clicked()
         m_serialPort->setParity(QSerialPort::NoParity);	//无校验位
         m_serialPort->setStopBits(QSerialPort::OneStop); //一位停止位
 
+        m_serialPort->waitForReadyRead(50);
+
         //连接信号槽 当下位机发送数据QSerialPortInfo 会发送个 readyRead 信号,我们定义个槽void receiveInfo()解析数据
         connect(m_serialPort,SIGNAL(readyRead()),this,SLOT(receiveInfo()));
 }
@@ -62,6 +64,8 @@ void MotionControl::on_connectButton_clicked()
         QByteArray info = m_serialPort->readAll();
         ui->recvEdit->moveCursor(QTextCursor::End);
         ui->recvEdit->insertPlainText(info);
+        if(info.at(2) == 0)
+            ui->curSpeedLabel->setText(QString::number(info.at(3) << 8 | info.at(4)));
 
 
     }
@@ -70,43 +74,43 @@ void MotionControl::on_connectButton_clicked()
 
 void MotionControl::on_moveButton_clicked()
 {
-    QByteArray xfer;
-    int32_t x_cord = ui->xLineEdit->text().toFloat() * 1000;
-    int32_t y_cord = ui->yLineEdit->text().toFloat() * 1000;
-    int32_t z_cord = ui->zLineEdit->text().toFloat() * 1000;
-    uint16_t speed = ui->speedLineEdit->text().toUShort();
-    uint16_t crc16_val = 0;
+//    QByteArray xfer;
+//    int32_t x_cord = ui->xLineEdit->text().toFloat() * 1000;
+//    int32_t y_cord = ui->yLineEdit->text().toFloat() * 1000;
+//    int32_t z_cord = ui->zLineEdit->text().toFloat() * 1000;
+//    uint16_t speed = ui->speedLineEdit->text().toUShort();
+//    uint16_t crc16_val = 0;
 
-    xfer.resize(19);
-    xfer[0] = 0xf0;
-    xfer[1] = 0x5a;
-    xfer[2] = 'M';
-    xfer[3] = x_cord >> 24;
-    xfer[4] = x_cord >> 16;
-    xfer[5] = x_cord >> 8;
-    xfer[6] = x_cord;
-    xfer[7] = y_cord >> 24;
-    xfer[8] = y_cord >> 16;
-    xfer[9] = y_cord >> 8;
-    xfer[10] = y_cord;
-    xfer[11] = z_cord >> 24;
-    xfer[12] = z_cord >> 16;
-    xfer[13] = z_cord >> 8;
-    xfer[14] = z_cord;
-    xfer[15] = speed >> 8;
-    xfer[16] = speed;
+//    xfer.resize(19);
+//    xfer[0] = 0xf0;
+//    xfer[1] = 0x5a;
+//    xfer[2] = 'M';
+//    xfer[3] = x_cord >> 24;
+//    xfer[4] = x_cord >> 16;
+//    xfer[5] = x_cord >> 8;
+//    xfer[6] = x_cord;
+//    xfer[7] = y_cord >> 24;
+//    xfer[8] = y_cord >> 16;
+//    xfer[9] = y_cord >> 8;
+//    xfer[10] = y_cord;
+//    xfer[11] = z_cord >> 24;
+//    xfer[12] = z_cord >> 16;
+//    xfer[13] = z_cord >> 8;
+//    xfer[14] = z_cord;
+//    xfer[15] = speed >> 8;
+//    xfer[16] = speed;
 
-    crc16_val = crc16tablefast(xfer, 15);
+//    crc16_val = crc16tablefast(xfer, 15);
 
-    ui->CRCHighLabel->setText(QString::number((quint8)(crc16_val >> 8), 16));
-    ui->CRCLowLabel->setText(QString::number((quint8)crc16_val, 16));
+//    ui->CRCHighLabel->setText(QString::number((quint8)(crc16_val >> 8), 16));
+//    ui->CRCLowLabel->setText(QString::number((quint8)crc16_val, 16));
 
-    xfer[17] = crc16_val >> 8;
-    xfer[18] = crc16_val;
-    xfer[19] = 0xa5;
-    xfer[20] = 0x0f;
+//    xfer[17] = crc16_val >> 8;
+//    xfer[18] = crc16_val;
+//    xfer[19] = 0xa5;
+//    xfer[20] = 0x0f;
 
-    m_serialPort->write(xfer);
+//    m_serialPort->write(xfer);
 }
 
 void MotionControl::on_speedSlider_sliderMoved(int position)
