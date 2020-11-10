@@ -30,6 +30,8 @@ private slots:
 
     void on_eraseButton_clicked();
 
+    void on_changeSpdButton_clicked();
+
 private:
     Ui::MotionControl *ui;
     QSerialPort *m_serialPort;

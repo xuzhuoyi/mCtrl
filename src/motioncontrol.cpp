@@ -46,7 +46,7 @@ void MotionControl::on_connectButton_clicked()
     }
     //打开成功
 
-        m_serialPort->setBaudRate(QSerialPort::Baud57600,QSerialPort::AllDirections);//设置波特率和读写方向
+        m_serialPort->setBaudRate(QSerialPort::Baud115200,QSerialPort::AllDirections);//设置波特率和读写方向
         m_serialPort->setDataBits(QSerialPort::Data8);		//数据位为8位
         m_serialPort->setFlowControl(QSerialPort::NoFlowControl);//无流控制
         m_serialPort->setParity(QSerialPort::NoParity);	//无校验位
@@ -59,19 +59,17 @@ void MotionControl::on_connectButton_clicked()
 }
 
 //接收单片机的数据
-    void MotionControl::receiveInfo()
-    {
-        QByteArray info = m_serialPort->readAll();
-        ui->recvEdit->moveCursor(QTextCursor::End);
-        ui->recvEdit->insertPlainText(info);
+void MotionControl::receiveInfo()
+{
+    QByteArray info = m_serialPort->readAll();
+    ui->recvEdit->moveCursor(QTextCursor::End);
+    ui->recvEdit->insertPlainText(info);
+    if(info.count() >= 7)
         if(info.at(2) == 0)
-            ui->curSpeedLabel->setText(QString::number(info.at(3) << 8 | info.at(4)));
+            ui->curSpeedLabel->setText(QString::number(((uint16_t)info.at(3) << 8) | (quint8)info.at(4)));
+}
 
-
-    }
-    //向单片机发送数据
-
-
+//向单片机发送数据
 void MotionControl::on_moveButton_clicked()
 {
 //    QByteArray xfer;
@@ -120,63 +118,63 @@ void MotionControl::on_speedSlider_sliderMoved(int position)
 
 void MotionControl::on_pushButton_clicked()
 {
-    QByteArray xfer;
-    int32_t xc_cord = ui->cirX0LineEdit->text().toFloat() * 1000;
-    int32_t yc_cord = ui->cirY0LineEdit->text().toFloat() * 1000;
-    int32_t x0_cord = ui->cirXCLineEdit->text().toFloat() * 1000;
-    int32_t y0_cord = ui->cirYCLineEdit->text().toFloat() * 1000;
+//    QByteArray xfer;
+//    int32_t xc_cord = ui->cirX0LineEdit->text().toFloat() * 1000;
+//    int32_t yc_cord = ui->cirY0LineEdit->text().toFloat() * 1000;
+//    int32_t x0_cord = ui->cirXCLineEdit->text().toFloat() * 1000;
+//    int32_t y0_cord = ui->cirYCLineEdit->text().toFloat() * 1000;
 
-    xfer.resize(8);
-    xfer[0] = 0xf0;
-    xfer[1] = 0x5a;
-    xfer[2] = 'V';
-    xfer[3] = 'A';
-    xfer[4] = 0;
-    xfer[5] = 0x01;
-    xfer[6] = 0xa5;
-    xfer[7] = 0x0f;
+//    xfer.resize(8);
+//    xfer[0] = 0xf0;
+//    xfer[1] = 0x5a;
+//    xfer[2] = 'V';
+//    xfer[3] = 'A';
+//    xfer[4] = 0;
+//    xfer[5] = 0x01;
+//    xfer[6] = 0xa5;
+//    xfer[7] = 0x0f;
 
-    m_serialPort->write(xfer);
+//    m_serialPort->write(xfer);
 
-    xfer.resize(16);
-    xfer[0] = 0xf0;
-    xfer[1] = 0x5a;
-    xfer[2] = 'V';
-    xfer[3] = 'O';
-    xfer[4] = 0x10;
-    xfer[5] = 0x00;
-    xfer[6] = 0x02;
-    xfer[7] = 0x06;
-    xfer[8] = xc_cord >> 16;
-    xfer[9] = xc_cord >> 8;
-    xfer[10] = xc_cord;
-    xfer[11] = yc_cord >> 16;
-    xfer[12] = yc_cord >> 8;
-    xfer[13] = yc_cord;
-    xfer[14] = 0xa5;
-    xfer[15] = 0x0f;
+//    xfer.resize(16);
+//    xfer[0] = 0xf0;
+//    xfer[1] = 0x5a;
+//    xfer[2] = 'V';
+//    xfer[3] = 'O';
+//    xfer[4] = 0x10;
+//    xfer[5] = 0x00;
+//    xfer[6] = 0x02;
+//    xfer[7] = 0x06;
+//    xfer[8] = xc_cord >> 16;
+//    xfer[9] = xc_cord >> 8;
+//    xfer[10] = xc_cord;
+//    xfer[11] = yc_cord >> 16;
+//    xfer[12] = yc_cord >> 8;
+//    xfer[13] = yc_cord;
+//    xfer[14] = 0xa5;
+//    xfer[15] = 0x0f;
 
-    m_serialPort->write(xfer);
+//    m_serialPort->write(xfer);
 
-    xfer.resize(16);
-    xfer[0] = 0xf0;
-    xfer[1] = 0x5a;
-    xfer[2] = 'V';
-    xfer[3] = 'P';
-    xfer[4] = 0x10;
-    xfer[5] = 0x00;
-    xfer[6] = 0x09;
-    xfer[7] = 0x06;
-    xfer[8] = x0_cord >> 16;
-    xfer[9] = x0_cord >> 8;
-    xfer[10] = x0_cord;
-    xfer[11] = y0_cord >> 16;
-    xfer[12] = y0_cord >> 8;
-    xfer[13] = y0_cord;
-    xfer[14] = 0xa5;
-    xfer[15] = 0x0f;
+//    xfer.resize(16);
+//    xfer[0] = 0xf0;
+//    xfer[1] = 0x5a;
+//    xfer[2] = 'V';
+//    xfer[3] = 'P';
+//    xfer[4] = 0x10;
+//    xfer[5] = 0x00;
+//    xfer[6] = 0x09;
+//    xfer[7] = 0x06;
+//    xfer[8] = x0_cord >> 16;
+//    xfer[9] = x0_cord >> 8;
+//    xfer[10] = x0_cord;
+//    xfer[11] = y0_cord >> 16;
+//    xfer[12] = y0_cord >> 8;
+//    xfer[13] = y0_cord;
+//    xfer[14] = 0xa5;
+//    xfer[15] = 0x0f;
 
-    m_serialPort->write(xfer);
+//    m_serialPort->write(xfer);
 
 }
 
@@ -215,3 +213,18 @@ uint16_t crc16tablefast(QByteArray ptr, uint16_t len)
     return crc;
 }
 
+
+void MotionControl::on_changeSpdButton_clicked()
+{
+    QByteArray xfer;
+
+    xfer.resize(6);
+    xfer[0] = 0x86;
+    xfer[1] = 0x43;
+    xfer[2] = 0x00;
+    xfer[3] = ui->speedLineEdit->text().toUShort();
+    xfer[4] = 0x34;
+    xfer[5] = 0x68;
+
+    m_serialPort->write(xfer);
+}

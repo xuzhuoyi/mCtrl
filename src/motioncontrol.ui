@@ -144,7 +144,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="moveButton">
+   <widget class="QPushButton" name="changeSpdButton">
     <property name="geometry">
      <rect>
       <x>520</x>
@@ -154,7 +154,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>移动</string>
+     <string>改变速度</string>
     </property>
    </widget>
    <widget class="QSlider" name="speedSlider">
@@ -167,10 +167,10 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="maximum">
-     <number>500</number>
+     <number>200</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -312,8 +312,19 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QDial" name="dial">
